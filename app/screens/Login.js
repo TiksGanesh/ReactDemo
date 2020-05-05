@@ -1,9 +1,10 @@
 import React from 'react'
 import { StyleSheet, Platform, Image, ImageBackground } from 'react-native'
-import { View, Container, Header, Content, Body, Text, Button, Spinner, Item, Input, Toast } from 'native-base'
+import { View, Container, Header, Content, Body, Text, Button, Spinner, Item, Input, Toast, Form } from 'native-base'
 import * as Style from '../theme/Theme.js'
 import dbManager from '../database/Database.js';
 import session from '../preferences/Session.js';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 
 export class Login extends React.Component {
 
@@ -15,6 +16,24 @@ export class Login extends React.Component {
             isLoading: false,
             errMessage: ''
         }
+    }
+
+    componentDidMount() {
+        this.confogureGoogleAccount()
+    }
+
+    confogureGoogleAccount = () => {
+
+        GoogleSignin.configure({
+            scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+            webClientId: 'xxxxxxxxxxxxxxxxxxxx',
+            offlineAccess: true,
+            hostedDomain: '',
+            loginHint: '',
+            forceConsentPrompt: true,
+            accountName: '',
+            iosClientId: 'xxxxxxxxxxxxxxxxxxx'
+        });
     }
 
     /**
@@ -62,7 +81,57 @@ export class Login extends React.Component {
     }
 
     loginWithGoogle = async () => {
+        try {
+            this.setState({ isLoading: true })
+            await GoogleSignin.hasPlayServices()
+            const userInfo = await GoogleSignin.signIn()
+            console.log('Google User Info:', userInfo.user.email)
+            this.posGoogleLoginProcess(userInfo)
+        } catch (e) {
+            if (e.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+                this.dispalayErrorToast('user cancelled the login flow')
+            } else if (e.code === statusCodes.IN_PROGRESS) {
+                // operation (f.e. sign in) is in progress already
+                this.dispalayErrorToast('sign in is in progress already')
+            } else if (e.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+                this.dispalayErrorToast('play services not available or outdated')
+            } else {
+                // some other error happened
+                this.dispalayErrorToast('something gone wrong')
+            }
+            console.log('Error', e)
+        } finally {
+            this.setState({ isLoading: false })
+        }
+    }
 
+    posGoogleLoginProcess = async (userInfo) => {
+
+        let user = {
+            firstname: userInfo.user.givenName,
+            lastname: userInfo.user.familyName,
+            email: userInfo.user.email,
+            password: 'password',
+            gender: 'key3'
+        };
+
+        let numberOfUserExist = await dbManager.isUserAlreadyExist(user.email);
+        if (numberOfUserExist == 0) {
+            let insertId = await dbManager.insertUser(user)
+            if (insertId > 0) {
+                session.storeSessionInfo(user.email);
+                session.setGoogleLoginFlag();
+                this.props.navigation.navigate('DashboartTabStackRt');
+            } else {
+                this.dispalaySuccessToast('Error to login user');
+            }
+        } else {
+            session.storeSessionInfo(user.email);
+            session.setGoogleLoginFlag();
+            this.props.navigation.navigate('DashboartTabStackRt');
+        }
     }
 
     dispalayErrorToast = (errorMessage) => {
@@ -102,30 +171,44 @@ export class Login extends React.Component {
                     {this.state.isLoading ? (
                         <Spinner color="red" />
                     ) : (
-                            <Button rounded dark block
-                                style={Style.styles.invitationButton}
-                                onPress={this.loginUser}>
-                                <Text>Login</Text>
-                            </Button>
-                        )}
-                    <Button rounded dark block
-                        onPress={this.loginWithFacebook}
-                        style={Style.styles.facebookButton}>
-                        <Text>Facebook</Text>
-                    </Button>
+                            <Form>
 
-                    <Button rounded dark block
+                                <Button rounded dark block
+                                    style={Style.styles.invitationButton}
+                                    onPress={this.loginUser}>
+                                    <Text>Login</Text>
+                                </Button>
+
+
+
+                                <GoogleSigninButton
+                                    style={Style.styles.googleButton}
+                                    size={GoogleSigninButton.Size.Wide}
+                                    color={GoogleSigninButton.Color.Dark}
+                                    onPress={this.loginWithGoogle}
+                                    disabled={this.state.isSigninInProgress} />
+
+                                <Button transparent light block
+                                    style={Style.styles.newUserButton}
+                                    onPress={this.navigateToRegisterUser}>
+                                    <Text>New User?</Text>
+                                </Button>
+
+                            </Form>
+                        )}
+
+                    {/* <Button rounded dark block
                         onPress={this.loginWithGoogle}
                         style={Style.styles.googleButton}>
                         <Text>Google+</Text>
-                    </Button>
+                    </Button> */}
 
+                    {/* <Button rounded dark block
+                                    onPress={this.loginWithFacebook}
+                                    style={Style.styles.facebookButton}>
+                                    <Text>Facebook</Text>
+                                </Button> */}
 
-                    <Button transparent light block
-                        style={Style.styles.newUserButton}
-                        onPress={this.navigateToRegisterUser}>
-                        <Text>New User?</Text>
-                    </Button>
                 </Content>
             </Container>
         )

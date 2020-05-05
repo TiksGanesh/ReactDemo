@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "910319298692",
+    "firebase_url": "https://reactdemo-57997.firebaseio.com",
+    "project_id": "reactdemo-57997",
+    "storage_bucket": "reactdemo-57997.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:910319298692:android:0d4d198a5ebfbc727bbad1",
+        "android_client_info": {
+          "package_name": "com.reactdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "910319298692-ui6m1avv5jst9mlofi2qeahg7hekpon5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reactdemo",
+            "certificate_hash": "2b1613d6ee0b3580e6c1620411c1527928af9fe9"
+          }
+        },
+        {
+          "client_id": "910319298692-bt8bme44et97n7617s6s18jptshmvn5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRLMv5xd5kau-ijBRqXUcPXOcR1OcwBWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "910319298692-bt8bme44et97n7617s6s18jptshmvn5u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

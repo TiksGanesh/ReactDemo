@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Platform, Dimensions } from 'react-native'
-import { Container, Header, Content, Body, Title, Left, Right, Button, Icon, Text, View } from 'native-base'
+import { Container, Header, Content, Body, Title, Left, Right, View, Spinner } from 'native-base'
 import * as Keys from '../preferences/Constant.js'
 import * as Style from '../theme/Theme.js'
 import MapView, { AnimatedRegion } from 'react-native-maps';
@@ -30,12 +30,12 @@ export class Map extends React.Component {
             console.log(location);
 
             let region = {
-                latitude: parseFloat(location.coords.latitude),
-                longitude: parseFloat(location.coords.longitude),
+                latitude: parseFloat(location.latitude),
+                longitude: parseFloat(location.longitude),
                 latitudeDelta: 5,
                 longitudeDelta: 5
             }
-            this.setState({ region: region });
+            this.setState({ region: region, loading: false });
         }).catch(error => {
             const { code, message } = error;
             console.warn(code, message);
@@ -46,7 +46,7 @@ export class Map extends React.Component {
         // do something
     }
 
-    onRegionChange = () => {}
+    onRegionChange = () => { }
 
 
 
@@ -68,28 +68,32 @@ export class Map extends React.Component {
                     <Right />
                 </Header>
                 <Content>
-                    <View style={Style.styles.container}>
-                        <MapView style={Style.styles.mapcontainer}
-                            showsUserLocation={true}
-                            showsMyLocationButton={false}
-                            zoomEnabled={true}
-                            initialRegion={this.state.region}
-                            showsUserLocation={true}
-                            onMapReady={this.onMapReady}
-                            onRegionChangeComplete={this.onRegionChange}>
+                    {this.state.loading ? (
+                        <Spinner color="red" />
 
-                            <MapView.Marker
-                                coordinate={{
-                                    "latitude": this.state.region.latitude,
-                                    "longitude": this.state.region.longitude
-                                }}
-                                title={"My Location"}
-                                draggable />
-                        </MapView>
-                    </View>
+                    ) : (
+                            <View style={Style.styles.container}>
+                                <MapView style={Style.styles.mapcontainer}
+                                    showsUserLocation={true}
+                                    showsMyLocationButton={false}
+                                    zoomEnabled={true}
+                                    initialRegion={this.state.region}
+                                    showsUserLocation={true}
+                                    onMapReady={this.onMapReady}
+                                    onRegionChangeComplete={this.onRegionChange}>
 
+                                    <MapView.Marker
+                                        coordinate={{
+                                            "latitude": this.state.region.latitude,
+                                            "longitude": this.state.region.longitude
+                                        }}
+                                        title={"My Location"}
+                                        draggable />
+                                </MapView>
+                            </View>
+                        )}
                 </Content>
-            </Container>
+            </Container >
         )
     }
 }

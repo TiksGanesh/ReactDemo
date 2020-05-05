@@ -32,8 +32,17 @@ export class Profile extends React.Component {
         this.setState({ firstname: profile.firstname, lastname: profile.lastname, email: profile.email, gender: profile.gender });
     }
 
-    logOutUser = () => {
+    logOutUser = async () => {
 
+        let isGoogleLogin = await session.isGoogleLogin()
+        if (isGoogleLogin) {
+            try {
+                await GoogleSignin.revokeAccess();
+                await GoogleSignin.signOut();
+            } catch (error) {
+                console.error(error);
+            }
+        }
         session.removeSession()
         this.props.navigation.navigate('LoginStackRT');
     }

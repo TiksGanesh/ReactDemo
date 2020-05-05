@@ -29,8 +29,7 @@ export const styles = StyleSheet.create({
         marginStart: 50,
         marginEnd: 50,
         marginTop: 16,
-        fontSize: 20,
-        backgroundColor: '#db4a39'
+        width: '70%'
     },
     newUserButton: {
         marginStart: 50,

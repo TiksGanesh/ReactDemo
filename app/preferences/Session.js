@@ -45,6 +45,26 @@ export class Session {
             }
         })
     }
+
+    setGoogleLoginFlag = () => {
+        AsyncStorage.setItem(GOOGLE_LOGIN, JSON.stringify(true))
+    }
+
+    isGoogleLogin = () => {
+        return new Promise((resolve, reject) => {
+            try {
+                AsyncStorage.getItem('key', (err, value) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(JSON.parse(value)) // boolean false
+                    }
+                })
+            } catch (e) {
+                reject(e)
+            }
+        })
+    }
 }
 
 
@@ -52,6 +72,7 @@ export class Session {
 // --- Session Keys ---
 
 const SESSION_KEY = 'session_key';
+const GOOGLE_LOGIN = 'google_login'
 
 // --- Session Keys ---
 

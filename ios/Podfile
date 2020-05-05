@@ -85,6 +85,8 @@ target 'ReactDemo' do
   pod 'GoogleMaps'
   #pod 'Google-Maps-iOS-Utils'
 
+  pod 'GoogleSignIn', '~> 5.0.2'
+
   target 'ReactDemoTests' do
     inherit! :complete
     # Pods for testing
