@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Linking } from 'react-native'
+import { Alert, Linking, Platform } from 'react-native'
 import { Container, Header, Content, Body, Title, Spinner, Left, Icon, Text, Button, Item, Input, Form, Picker, View, Toast, Right } from 'native-base'
 import * as Keys from '../preferences/Constant.js'
 import * as Style from '../theme/Theme.js'
@@ -158,6 +158,14 @@ export class Profile extends React.Component {
         });
     }
 
+    navigateToBiometricAuthentication = () => {
+        Platform.OS === 'ios' ? (
+            this.props.navigation.push('BioAuthIosRT')
+        ) : (
+                this.props.navigation.push('BioAuthDroidRT')
+            )
+    }
+
 
     render() {
         return (
@@ -255,6 +263,12 @@ export class Profile extends React.Component {
                             style={Style.styles.deleteButton}
                             onPress={this.openPrivacyPolicy}>
                             <Text>Privacy &amp; Policy</Text>
+                        </Button>
+
+                        <Button rounded dark block warning
+                            style={Style.styles.deleteButton}
+                            onPress={this.navigateToBiometricAuthentication}>
+                            <Text>Biometric Authentication</Text>
                         </Button>
 
                     </Form>

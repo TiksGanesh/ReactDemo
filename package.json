@@ -16,6 +16,7 @@
     "native-base": "^2.13.12",
     "react": "16.11.0",
     "react-native": "0.62.2",
+    "react-native-fingerprint-scanner": "^4.1.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-get-location": "^1.4.2",
     "react-native-google-signin": "^2.1.1",

@@ -10,6 +10,8 @@ import { Details } from '../screens/Details.js';
 
 import { Map } from '../screens/Map.js';
 import { Profile } from '../screens/Profile.js';
+import { FingerprintAuthAndroid } from '../screens/FingerprintAuthAndroid.js';
+import { FingerprintAuthios } from '../screens/FingerprintAuthios.js';
 
 
 
@@ -50,6 +52,25 @@ const dashbaordStackScreen = {
 
 const homeDetailStack = createStackNavigator(dashbaordStackScreen, defaultStackNavigationOptions);
 
+// --- Profile Biometric Authentication ---
+
+const profileStackScreen = {
+    ProfileRT: {
+        screen: Profile,
+        title: 'Profile'
+    },
+    BioAuthDroidRT: {
+        screen: FingerprintAuthAndroid,
+        title: 'Biometric Authentication'
+    },
+    BioAuthIosRT: {
+        screen: FingerprintAuthios,
+        title: 'Biometric Authentication'
+    }
+}
+
+const profileDetailStack = createStackNavigator(profileStackScreen, defaultStackNavigationOptions);
+
 
 // --- TabBar Code ---
 
@@ -69,8 +90,8 @@ const dashboardTabScreens = {
             tabBarLabel: 'Map'
         }
     },
-    ProfileRT: {
-        screen: Profile,
+    ProfileStackRT: {
+        screen: profileDetailStack,
         title: 'Profile',
         navigationOptions: {
             tabBarLabel: 'Profile'
